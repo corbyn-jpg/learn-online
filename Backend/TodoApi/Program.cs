@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoTest.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,8 +13,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<TodoContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("TodoDatabase")));
+builder.Services.AddDbContext<TodoContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("ToDoDatabase")));
+
 
 var app = builder.Build();
 
