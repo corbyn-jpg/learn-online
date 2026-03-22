@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TodoTest.Models;
+using UserTest.Models;
 
 namespace TodoTest.Data
 {
@@ -10,7 +11,11 @@ namespace TodoTest.Data
 
         }
 
-        public DbSet<TodoItem> Todos { get; set; }
-        public DbSet<User> Users { get; set; }
+
+
+      
+        public DbSet<TodoItem> Todos {get; set; }
+         public DbSet<User> Users {get ; set;}
+        
     }
 }
