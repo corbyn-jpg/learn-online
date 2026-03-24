@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TodoTest.Models;
-using UserTest.Models;
+using LearnOnline.Models;
 
-namespace TodoTest.Data
+namespace LearnOnline.Data
 {
     public class TodoContext : DbContext
     {
@@ -11,11 +10,8 @@ namespace TodoTest.Data
 
         }
 
-
-
-      
         public DbSet<TodoItem> Todos {get; set; }
-         public DbSet<User> Users {get ; set;}
+        public DbSet<User> Users {get ; set;}
         
     }
 }

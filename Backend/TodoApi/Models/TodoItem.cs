@@ -1,4 +1,4 @@
-namespace TodoTest.Models
+namespace LearnOnline.Models
 {
     
     public class TodoItem

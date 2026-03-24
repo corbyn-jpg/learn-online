@@ -1,4 +1,4 @@
-namespace UserTest.Models
+namespace LearnOnline.Models
 {
     
     public class User

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TodoTest.Data;
+using LearnOnline.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
