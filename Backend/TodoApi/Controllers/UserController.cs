@@ -9,8 +9,8 @@ namespace LearnOnline.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly TodoContext _context;
-        public UserController(TodoContext context)
+        private readonly AppDbContext _context;
+        public UserController(AppDbContext context)
         {
             _context = context;
         }
