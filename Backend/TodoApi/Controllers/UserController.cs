@@ -5,7 +5,6 @@ using LearnOnline.Models;
 
 namespace LearnOnline.Controllers
 {
-    
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -16,13 +15,10 @@ namespace LearnOnline.Controllers
             _context = context;
         }
 
-        //Get
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAll()
         {
             return await _context.Users.ToListAsync();
-
         }
-       
     }
 }
