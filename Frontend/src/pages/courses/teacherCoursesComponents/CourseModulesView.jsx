@@ -1,7 +1,7 @@
 import React from "react";
 import ModuleAccordion from "../../../components/moduleAccordion";
 
-export default function CourseModulesView() {
+export function CourseModulesView() {
   return (
     <div className="flex-1 flex h-full overflow-hidden">
       {/* Third-tier Nav: Modules Accordion */}
