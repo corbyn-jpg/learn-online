@@ -11,7 +11,8 @@ export function StudentColumn({
   studentSort,
   setStudentSort,
   selectedCourseId,
-  filteredStudents
+  filteredStudents,
+  onOpenProfile
 }) {
   return (
     <div className="flex flex-col bg-white/80 border-1 border-gray-200 rounded-3xl drop-shadow-xl p-4 min-h-0">
@@ -51,17 +52,26 @@ export function StudentColumn({
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full rounded-2xl px-4 py-3.5 flex items-center gap-3 bg-white border border-gray-200 hover:shadow-md hover:border-gray-300 transition-all duration-200"
+              onClick={() => onOpenProfile(student)}
+              className="w-full rounded-2xl px-4 py-3.5 flex items-center gap-3 bg-white border border-gray-200 hover:shadow-md hover:border-indigo-300 hover:bg-slate-50 cursor-pointer transition-all duration-200 group"
             >
-              <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
-                <User className="w-4 h-4 text-gray-500" />
+              <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0 group-hover:bg-indigo-100 transition-colors">
+                <User className="w-4 h-4 text-gray-500 group-hover:text-indigo-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-800 truncate">{student.name}</p>
+                <p className="text-sm font-bold text-gray-800 truncate group-hover:text-indigo-600 transition-colors">
+                  {student.name}
+                </p>
                 <p className="text-xs text-gray-400">{student.major}</p>
               </div>
-              <button className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors shrink-0">
-                <ExternalLink className="w-4 h-4 text-gray-400" />
+              <button 
+                className="w-8 h-8 rounded-lg hover:bg-indigo-200 flex items-center justify-center transition-colors shrink-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenProfile(student);
+                }}
+              >
+                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-indigo-600" />
               </button>
             </motion.div>
           ))

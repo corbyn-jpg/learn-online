@@ -1,5 +1,5 @@
-﻿import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+﻿import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useCourses } from "../../contexts/CoursesContext";
 import CourseMenu from "../../components/coursesMenu";
 import CourseSecondaryNav from "../../components/courseSecondaryNav";
@@ -14,6 +14,7 @@ import { getCourseAssignments } from "../../services/assignmentService";
 import { getCourseGrades } from "../../services/gradeService";
 import { getCourseSubmissions } from "../../services/submissionService";
 import { getCourseAnnouncements, createAnnouncement, deleteAnnouncement } from "../../services/announcementService";
+import { getCourseById } from "../../services/courseService";
 import {
     EditorRoot,
     EditorContent,
@@ -2140,7 +2141,9 @@ function CourseNotesView({ activeCourseId }) {
 export default function TeacherCourses() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { visibleCourses, loading } = useCourses();
+    const { visibleCourses, loading: contextLoading } = useCourses();
+    const [previewCourse, setPreviewCourse] = useState(null);
+    const [previewLoading, setPreviewLoading] = useState(false);
 
     // Check for hideNav in URL and persist it
     const hideNav = React.useMemo(() => {
@@ -2152,24 +2155,58 @@ export default function TeacherCourses() {
     const pathParts = location.pathname.split('/').filter(Boolean);
     const activeCourseId = pathParts.length > 1 ? pathParts[1] : null;
 
+    // Check if we are in a preview modal to optimize performance
+    const isPreview = new URLSearchParams(window.location.search).get("viewAs") === "teacher";
+
+    // Fetch course data if in preview mode and not in context
+    useEffect(() => {
+        async function fetchPreviewData() {
+            if (isPreview && activeCourseId && !visibleCourses.find(c => c.id === activeCourseId)) {
+                setPreviewLoading(true);
+                try {
+                    const data = await getCourseById(activeCourseId);
+                    // Map to the same structure as CoursesContext
+                    setPreviewCourse({
+                        id: data.id,
+                        subjectName: data.subject.name,
+                        label: data.subject.code,
+                        code: data.subject.code.substring(0, 2),
+                        number: data.subject.code.substring(2),
+                        term: data.term,
+                        description: data.subject.description,
+                        color: "#673694ff",
+                        href: `/courses/${data.id}`
+                    });
+                } catch (err) {
+                    console.error("Failed to fetch preview course:", err);
+                } finally {
+                    setPreviewLoading(false);
+                }
+            }
+        }
+        fetchPreviewData();
+    }, [isPreview, activeCourseId, visibleCourses]);
+
     // React Router Guard: If the user navigates merely to /courses without specifying an ID, 
     // or if they are on a course but no specific sub-page is active, ensure we default to home.
     useEffect(() => {
-        if (!loading && visibleCourses.length > 0) {
-            const courseExistsInList = visibleCourses.find(c => c.id === activeCourseId);
+        if (!contextLoading && !previewLoading && (visibleCourses.length > 0 || previewCourse)) {
+            const courseExistsInList = visibleCourses.find(c => c.id === activeCourseId) || (previewCourse?.id === activeCourseId);
             
             if (!activeCourseId || !courseExistsInList) {
-                // Redirect to the first course's home if no valid course ID is present
-                const targetPath = `/courses/${visibleCourses[0].id}${hideNav ? '?hideNav=true' : ''}`;
-                navigate(targetPath, { replace: true });
+                const firstCourseId = visibleCourses[0]?.id || previewCourse?.id;
+                if (firstCourseId) {
+                    const targetPath = `/courses/${firstCourseId}${hideNav ? '?hideNav=true' : ''}`;
+                    navigate(targetPath, { replace: true });
+                }
             } else if (location.pathname === `/courses/${activeCourseId}` && !location.pathname.endsWith('/')) {
                 // Ensure the path conceptually works for matching if needed, though usually just defining isHomePage is enough
             }
         }
-    }, [loading, visibleCourses, activeCourseId, navigate, hideNav, location.pathname]);
+    }, [contextLoading, previewLoading, visibleCourses, previewCourse, activeCourseId, navigate, hideNav, location.pathname]);
 
     // Build the resolved standard course object
-    const course = visibleCourses.find(c => c.id === activeCourseId) || visibleCourses[0] || null;
+    const course = visibleCourses.find(c => c.id === activeCourseId) || previewCourse || visibleCourses[0] || null;
     const subject = course ? {
         name: course.subjectName,
         code: course.label,
@@ -2191,8 +2228,7 @@ export default function TeacherCourses() {
     // Home logic: Strictly defined as being on the base course URL exactly
     const isHomePage = path === coursePath || path === `${coursePath}/`;
 
-    // Check if we are in a preview modal to optimize performance
-    const isPreview = new URLSearchParams(window.location.search).get("viewAs") === "teacher";
+    // Check if we are in a preview modal to optimize performance (already defined above)
 
     return (
         <div className={`flex h-screen overflow-hidden ${(isPreview || hideNav) ? 'bg-white' : ''} ${hideNav ? "" : "-ml-30 -mr-20 -mt-24"}`}>
@@ -2214,12 +2250,16 @@ export default function TeacherCourses() {
 
       {/* Middle Section: Second Navigation Bar for course-internal links */}
       <div className="flex flex-col h-full py-1 justify-center">
-        <CourseSecondaryNav activeCourseId={activeCourseId || (visibleCourses[0]?.id)} />
+        <CourseSecondaryNav activeCourseId={activeCourseId || course?.id} hideNav={hideNav || isPreview} />
       </div>
 
             {/* Main Content Area */}
             <div className={`flex-1 flex flex-col ${(isPreview || hideNav) ? 'pt-4' : 'pt-24'} overflow-y-auto`}>
-            {isGradesPage ? (
+            {contextLoading || previewLoading ? (
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="w-8 h-8 border-4 border-[#3C0078] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            ) : isGradesPage ? (
                 <CourseGradesView activeCourseId={activeCourseId} />
             ) : isAnnouncementsPage ? (
                 <CourseAnnouncementsView activeCourseId={activeCourseId} />
@@ -2232,7 +2272,7 @@ export default function TeacherCourses() {
             ) : isNotesPage ? (
                 <CourseNotesView activeCourseId={activeCourseId} />
             ) : (
-                <CourseHomeView subject={subject} course={course} loading={loading} />
+                <CourseHomeView subject={subject} course={course} loading={contextLoading || previewLoading} />
             )}
             </div>
         </div>

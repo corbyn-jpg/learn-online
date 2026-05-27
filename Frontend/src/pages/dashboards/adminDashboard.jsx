@@ -11,7 +11,8 @@ import {
   CourseColumn, 
   StudentColumn, 
   AssignStudentsModal,
-  SendNotificationModal
+  SendNotificationModal,
+  StudentDetailModal
 } from "./adminDashboardComponents";
 
 // ──────────────────────────────────────────────
@@ -76,6 +77,8 @@ export default function AdminDashboard() {
   const [isSendingNotification, setIsSendingNotification] = useState(false);
   const [showTeacherAnalytics, setShowTeacherAnalytics] = useState(false);
   const [analyticsTeacher, setAnalyticsTeacher] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
 
   // ── Derived data ──
   const filteredLecturers = useMemo(() => {
@@ -210,6 +213,11 @@ export default function AdminDashboard() {
     );
   };
 
+  const handleOpenStudentProfile = (student) => {
+    setSelectedStudent(student);
+    setIsStudentModalOpen(true);
+  };
+
   const selectedLecturer = lecturers.find((l) => l.id === selectedLecturerId);
   const selectedCourse = courses.find((c) => c.id === selectedCourseId);
 
@@ -295,6 +303,7 @@ export default function AdminDashboard() {
             setStudentSort={setStudentSort}
             selectedCourseId={selectedCourseId}
             filteredStudents={filteredStudents}
+            onOpenProfile={handleOpenStudentProfile}
           />
         </div>
       </div>
@@ -333,6 +342,14 @@ export default function AdminDashboard() {
           />
         )}
       </AnimatePresence>
+
+      {/* ── Student Detail Modal ── */}
+      <StudentDetailModal
+        isOpen={isStudentModalOpen}
+        onClose={() => setIsStudentModalOpen(false)}
+        student={selectedStudent}
+        courses={courses}
+      />
     </div>
   );
 }

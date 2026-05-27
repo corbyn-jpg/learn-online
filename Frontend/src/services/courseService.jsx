@@ -29,3 +29,13 @@ export async function getTeacherCourses(teacherId) {
 
   return handleResponse(res);
 }
+
+// GET /api/Course/:id – fetch a single course by ID
+export async function getCourseById(id) {
+  const res = await fetch(`${API_BASE}/Course/${encodeURIComponent(id)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" }
+  });
+
+  return handleResponse(res);
+}
