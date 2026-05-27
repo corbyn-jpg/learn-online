@@ -3,6 +3,7 @@ using System;
 using LearnOnline.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260525083558_AddAssignmentTypeAndClose")]
+    partial class AddAssignmentTypeAndClose
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,9 +74,6 @@ namespace TodoApi.Migrations
                     b.Property<bool>("AllowMultipleAttempts")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("CloseDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -92,9 +92,6 @@ namespace TodoApi.Migrations
 
                     b.Property<int?>("MaxPoints")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime?>("OpenDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("QuizQuestionsJson")
                         .HasColumnType("text");
@@ -293,9 +290,6 @@ namespace TodoApi.Migrations
                     b.Property<string>("GradedBy")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsReleased")
-                        .HasColumnType("boolean");
 
                     b.Property<decimal?>("PointsEarned")
                         .HasColumnType("numeric");
