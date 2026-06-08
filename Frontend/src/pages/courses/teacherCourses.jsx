@@ -16,7 +16,14 @@ import {
 export default function TeacherCourses() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { visibleCourses, loading } = useCourses();
+    const { visibleCourses, loading: contextLoading } = useCourses();
+    const [previewCourse, setPreviewCourse] = useState(null);
+    const [previewLoading, setPreviewLoading] = useState(false);
+
+    // Check for hideNav in URL and persist it
+    const hideNav = React.useMemo(() => {
+        return new URLSearchParams(location.search).get("hideNav") === "true";
+    }, [location.search]);
 
     const pathParts = location.pathname.split('/').filter(Boolean);
     const activeCourseId = pathParts.length > 1 ? pathParts[1] : null;
@@ -28,7 +35,7 @@ export default function TeacherCourses() {
                 navigate(`/courses/${visibleCourses[0].id}`, { replace: true });
             }
         }
-    }, [loading, visibleCourses, activeCourseId, navigate, pathParts.length]);
+    }, [contextLoading, previewLoading, visibleCourses, previewCourse, activeCourseId, navigate, hideNav, location.pathname]);
 
     const course = visibleCourses.find(c => c.id === activeCourseId) || visibleCourses[0] || null;
     const subject = course ? {
