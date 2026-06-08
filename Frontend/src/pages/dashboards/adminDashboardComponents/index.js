@@ -8,4 +8,3 @@ export * from "./SendNotificationModal";
 export * from "./LecturerColumn";
 export * from "./CourseColumn";
 export * from "./StudentColumn";
-export * from "./StudentDetailModal";
