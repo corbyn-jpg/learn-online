@@ -1,11 +1,11 @@
-![mockup screenshot](ReadMeImages/StudentFeatures.png)
+![mockup screenshot](ReadMeImages/KoruPromo.png)
 # Kuro
 
 Koru is a full-stack Learning Management System (LMS) built to centralise academic workflows into a single platform. Designed as a cross-platform desktop application, Koru provides dedicated experiences for Students, Teachers, and Administrators while ensuring compliance with South Africa's Protection of Personal Information Act (POPIA).
 
 By combining course management, scheduling, assessments, analytics, and communication tools into one ecosystem, Koru eliminates the inefficiencies caused by fragmented educational systems.
 
-![mockup screenshot](images/screenshot.png)
+![mockup screenshot](ReadMeImages/TeacherView.png)
 ## Overview
 
 Educational institutions often rely on multiple disconnected platforms to manage teaching, learning, scheduling, grading, and administration. This fragmentation creates unnecessary complexity for both staff and students, resulting in duplicated work, missed deadlines, and poor visibility across academic operations.
@@ -13,6 +13,9 @@ Educational institutions often rely on multiple disconnected platforms to manage
 Koru was developed to solve this problem by providing a centralised platform where all academic activities can be managed in one place.
 
 The application was developed as a native desktop experience using Electron, allowing it to run seamlessly on both Windows and macOS while maintaining the flexibility of modern web technologies.
+
+
+
 
 ## **Core Objectives** 
 
@@ -143,7 +146,7 @@ The application was developed as a native desktop experience using Electron, all
 * Create personal calendar events
 * Monitor upcoming deadlines
 
-![mockup screenshot](images/screenshot.png)
+![mockup screenshot](ReadMeImages/TeacherView.png)
 ### Teacher Features
 
 * Manage courses and modules
@@ -157,7 +160,7 @@ The application was developed as a native desktop experience using Electron, all
 * Create calendar events and reminders
 
 
-![mockup screenshot](images/screenshot.png)
+![mockup screenshot](ReadMeImages/AdminView.png)
 ### Administrator Features
 
 
@@ -170,7 +173,7 @@ The application was developed as a native desktop experience using Electron, all
 
 ## **Meet the Team** 
 
-![team pic from slides](images/screenshot.png)
+![team pic from slides](ReadMeImages/Team.png)
 ## **Team Setup** 
 
 Git and Github were the team’s primary collaboration platform. All work was tracked, reviewed, and merged through the shared repository with a clear branching strategy to isolate features and prevent conflicts. The team used Whatsapp and Discord to 
@@ -247,6 +250,24 @@ communicate changes, ideas and have team discussions throughout the project. Rol
 
 - **Tailwind CSS + DaisyUI:** Tailwind allows rapid, consistent  UI development using utility classes, removing the need to write custom CSS from scratch. DaisyUI adds pre-built accessible components on top of Tailwind. Together they support the "corporate fun" visual design brief while ensuring fast, responsive, and consistent styling aligned with the Learn More brand across all screens of the desktop application. 
 
+
+
+### Using Tailwind CSS
+
+- Tailwind is already set up in this project.
+- You can use Tailwind utility classes directly in your JSX, e.g.:
+  `<div className="bg-white p-4 rounded-lg shadow-md">Hello</div>`
+- Custom styles and plugins (like DaisyUI) are included in `src/index.css`.
+- For custom scrollbars, see the `.scrollbar-black` class in `src/index.css`.
+- If you want to add new Tailwind classes, just use them in your components—no extra setup needed.
+
+For Tailwind https://tailwindcss.com/docs
+
+For Solar icons check here: https://solar-icons.vercel.app/icons (Use these icons, NOT REACT ICONS)
+
+For DaisyUI elements check here: https://daisyui.com/components/ (simply copy jsx code and paste inside your component)
+
+ 
 ## **Technical Decisions** 
 
 ## **Important Decisions Made Throughout the Project** 
@@ -359,6 +380,51 @@ React frontend, communicating with an ASP.NET Core backend over HTTP REST:
 |NoteController|Personal notes|
 |SubjectController|Academic subjects|
 
+---
+
+## Testing
+
+### Backend (xUnit + Coverlet)
+
+- **Location**: `Backend/LearnOnline.Tests`
+- **Framework**: xUnit with EF Core InMemory provider, Moq, FluentAssertions
+- **Tests**: 134 (covers every controller's CRUD paths plus auth/Google flows)
+
+Run from the repo root:
+
+```
+dotnet test Backend/LearnOnline.Tests/LearnOnline.Tests.csproj
+```
+
+Generate the HTML coverage report (the colourful per-file web view):
+
+```
+dotnet test Backend/LearnOnline.Tests/LearnOnline.Tests.csproj --collect:"XPlat Code Coverage" --results-directory reports/backend/raw
+reportgenerator -reports:"reports/backend/raw/**/coverage.cobertura.xml" -targetdir:"reports/backend/html" -reporttypes:"Html;TextSummary" -title:"LearnOnline Backend Coverage" -classfilters:"-TodoApi.Migrations.*;-LearnOnline.Data.DbSeeder;-LearnOnline.Data.RealDataSeeder;-Program;-Microsoft.AspNetCore.OpenApi.Generated;-System.Runtime.CompilerServices.*"
+```
+
+Open `reports/backend/html/index.html` in a browser for the coverage dashboard. Summary text lives at `reports/backend/html/Summary.txt`.
+
+One-time setup (already done locally):
+
+```
+dotnet tool install -g dotnet-reportgenerator-globaltool
+```
+
+### Frontend (Jest + React Testing Library)
+
+- **Location**: `Frontend/tests`
+- **Framework**: Jest 30, jsdom, React Testing Library, Babel transform
+- **Tests**: 82 (API services, AuthContext, ProtectedRoute, ChipListEditor, profile utils)
+
+Run from `Frontend/`:
+
+```
+npm test
+npm run test:coverage
+```
+
+Open `reports/frontend/index.html` for the coverage dashboard.
 
 
 ## **Testing Approach** 
