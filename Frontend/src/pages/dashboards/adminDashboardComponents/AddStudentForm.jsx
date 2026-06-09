@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
-export function AddLecturerForm({ onSave, onCancel }) {
+export function AddStudentForm({ onSave, onCancel }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,7 +36,7 @@ export function AddLecturerForm({ onSave, onCancel }) {
         className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 flex flex-col gap-5"
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-black font-['Gabarito']">Add Lecturer</h3>
+          <h3 className="text-xl font-black font-['Gabarito']">Add Student</h3>
           <button
             onClick={onCancel}
             className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors"
@@ -73,7 +73,7 @@ export function AddLecturerForm({ onSave, onCancel }) {
           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Email Address</label>
           <input
             type="email"
-            placeholder="lecturer@university.ac"
+            placeholder="student@university.ac"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="text-sm border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#3C0078] focus:ring-2 focus:ring-[#3C0078]/10 transition-all"
@@ -90,7 +90,7 @@ export function AddLecturerForm({ onSave, onCancel }) {
             onKeyDown={(e) => e.key === "Enter" && handleSave()}
             className="text-sm border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-[#3C0078] focus:ring-2 focus:ring-[#3C0078]/10 transition-all"
           />
-          <p className="text-xs text-gray-400">The lecturer must change this password on first login.</p>
+          <p className="text-xs text-gray-400">The student will be enrolled in the selected course and must change this password on first login.</p>
         </div>
 
         <div className="flex gap-3 pt-1">
@@ -105,7 +105,7 @@ export function AddLecturerForm({ onSave, onCancel }) {
             disabled={!canSave}
             className="flex-[2] px-4 py-3 text-sm font-bold text-white bg-[#3C0078] rounded-2xl hover:bg-[#2a0055] transition-colors disabled:opacity-40"
           >
-            Add Lecturer
+            Add Student
           </button>
         </div>
       </motion.div>
